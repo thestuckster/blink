@@ -1,23 +1,18 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"github.com/thestuckster/blink/internal"
+	"log"
 )
 
 // installCmd represents the install command
 var installCmd = &cobra.Command{
 	Use:   "install",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "install an addon",
+	Long:  `example usage go install https://github.com/Auctionator/Auctionator`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("install called")
+		install(args)
 	},
 }
 
@@ -33,4 +28,12 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// installCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func install(args []string) {
+	config := internal.LoadConfig()
+	repoName := internal.SplitProjectNameFromUrl(args[0])
+	log.Println(repoName)
+
+	internal.FetchLatestRelease(repoName, &config)
 }
