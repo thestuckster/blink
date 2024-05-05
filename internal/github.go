@@ -43,7 +43,7 @@ func FetchLatestRelease(repo string, config *Config) {
 	}
 	defer CleanUpFile(unzippedPath)
 
-	updateConfig(repo, config, unzippedPath, release, err)
+	moveSubFilesAndUpdateConfig(repo, config, unzippedPath, release, err)
 }
 
 func getReleaseInfo(repo string) (*http.Response, error, GitHubRelease) {
@@ -106,7 +106,7 @@ func createZipFile(config *Config, zipAsset GithubReleaseAsset, err error, resp 
 	return zipPath, err
 }
 
-func updateConfig(repo string, config *Config, unzippedPath string, release GitHubRelease, err error) {
+func moveSubFilesAndUpdateConfig(repo string, config *Config, unzippedPath string, release GitHubRelease, err error) {
 	folders := MoveFilesUpALevel(unzippedPath, config)
 	repoUrl := "https://api.github.com/repos/" + repo
 	version := release.Name
