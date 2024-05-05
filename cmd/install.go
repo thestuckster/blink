@@ -10,7 +10,7 @@ import (
 var installCmd = &cobra.Command{
 	Use:   "install",
 	Short: "install an addon",
-	Long:  `example usage go install https://github.com/Auctionator/Auctionator`,
+	Long:  `example usage: blink install https://github.com/Auctionator/Auctionator`,
 	Run: func(cmd *cobra.Command, args []string) {
 		install(args)
 	},

@@ -63,7 +63,7 @@ func Unzip(zipPath, outDir string) error {
 	return nil
 }
 
-func MoveFilesUpALevel(filePath string, config *Config) {
+func MoveFilesUpALevel(filePath string, config *Config) (folders []string) {
 	addOnsPath := config.GamePath + "\\" + AddOnsFolder
 
 	items, err := os.ReadDir(filePath)
@@ -79,10 +79,12 @@ func MoveFilesUpALevel(filePath string, config *Config) {
 			err := os.Rename(dirPath, newPath)
 			if err != nil {
 				log.Panic(err)
-				continue
 			}
+			folders = append(folders, newPath)
 		}
 	}
+
+	return folders
 }
 
 func CleanUpFile(filePath string) {

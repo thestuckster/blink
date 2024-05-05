@@ -43,24 +43,7 @@ func FetchLatestRelease(repo string, config *Config) {
 	}
 	defer CleanUpFile(unzippedPath)
 
-	MoveFilesUpALevel(unzippedPath, config)
-}
-
-func createZipFile(config *Config, zipAsset GithubReleaseAsset, err error, resp *http.Response) (string, error) {
-
-	zipPath := config.GamePath + AddOnsFolder + "\\" + zipAsset.Name
-	out, err := os.Create(zipPath)
-	if err != nil {
-		log.Panic(err)
-	}
-	defer out.Close()
-
-	_, err = io.Copy(out, resp.Body)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	return zipPath, err
+	updateConfig(repo, config, unzippedPath, release, err)
 }
 
 func getReleaseInfo(repo string) (*http.Response, error, GitHubRelease) {
@@ -104,4 +87,32 @@ func getZipReleaseAsset(resp *http.Response, err error, release GitHubRelease) (
 func SplitProjectNameFromUrl(url string) string {
 	parts := strings.Split(url, "/")
 	return parts[len(parts)-2] + "/" + parts[len(parts)-1]
+}
+
+func createZipFile(config *Config, zipAsset GithubReleaseAsset, err error, resp *http.Response) (string, error) {
+
+	zipPath := config.GamePath + AddOnsFolder + "\\" + zipAsset.Name
+	out, err := os.Create(zipPath)
+	if err != nil {
+		log.Panic(err)
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, resp.Body)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return zipPath, err
+}
+
+func updateConfig(repo string, config *Config, unzippedPath string, release GitHubRelease, err error) {
+	folders := MoveFilesUpALevel(unzippedPath, config)
+	repoUrl := "https://api.github.com/repos/" + repo
+	version := release.Name
+	config.AddAddOn(repoUrl, repo, version, folders)
+	err = config.Save()
+	if err != nil {
+		log.Panic(err)
+	}
 }

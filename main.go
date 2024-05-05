@@ -13,7 +13,7 @@ func main() {
 }
 
 func initBlink() {
-	config := internal.Config{}
+	config := internal.LoadConfig()
 	if !config.HasGamePath() {
 		path, err := internal.FindGameInstallationDirectory()
 		if err != nil {
@@ -26,4 +26,5 @@ func initBlink() {
 			log.Panic(err)
 		}
 	}
+
 }

@@ -17,6 +17,7 @@ type AddOn struct {
 	Url     string
 	Repo    string
 	Version string
+	Folders []string
 }
 
 func LoadConfig() Config {
@@ -44,14 +45,30 @@ func (config *Config) HasGamePath() bool {
 	return true
 }
 
-func (config *Config) AddAddOn(url, repo, version string) {
+func (config *Config) AddAddOn(url, repo, version string, folders []string) {
 	addOn := AddOn{
 		Url:     url,
 		Repo:    repo,
 		Version: version,
+		Folders: folders,
 	}
 
 	config.AddOns = append(config.AddOns, addOn)
+}
+
+func (config *Config) RemoveAnAddOn(repo string) {
+	var addOnIndex int
+	for i, addOn := range config.AddOns {
+		if addOn.Repo == repo {
+			addOnIndex = i
+		}
+	}
+
+	config.AddOns = append(config.AddOns[:addOnIndex], config.AddOns[addOnIndex+1:]...)
+	err := config.Save()
+	if err != nil {
+		log.Panic(err)
+	}
 }
 
 func (config *Config) Save() error {
