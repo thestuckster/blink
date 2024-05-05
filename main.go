@@ -5,6 +5,7 @@ import (
 	"github.com/thestuckster/blink/cmd"
 	"github.com/thestuckster/blink/internal"
 	"log"
+	"os"
 )
 
 func main() {
@@ -13,6 +14,7 @@ func main() {
 }
 
 func initBlink() {
+	createDefaultConfigIfMissing()
 	config := internal.LoadConfig()
 	if !config.HasGamePath() {
 		path, err := internal.FindGameInstallationDirectory()
@@ -26,5 +28,12 @@ func initBlink() {
 			log.Panic(err)
 		}
 	}
+}
 
+func createDefaultConfigIfMissing() {
+	_, err := os.Stat("config.json")
+	if os.IsNotExist(err) {
+		config := internal.Config{}
+		config.Save()
+	}
 }
