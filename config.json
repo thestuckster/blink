@@ -1,4 +1,18 @@
 {
-    "GamePath": "",
-    "AddOns": []
+    "GamePath": "C:\\Program Files (x86)\\World of Warcraft",
+    "AddOns": [
+        {
+            "Url": "https://api.github.com/repos/WeakAuras/WeakAuras2",
+            "Repo": "WeakAuras/WeakAuras2",
+            "Version": "5.12.9",
+            "Folders": [
+                "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\Interface\\AddOns\\WeakAuras",
+                "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\Interface\\AddOns\\WeakAurasArchive",
+                "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\Interface\\AddOns\\WeakAurasModelPaths",
+                "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\Interface\\AddOns\\WeakAurasOptions",
+                "C:\\Program Files (x86)\\World of Warcraft\\_retail_\\Interface\\AddOns\\WeakAurasTemplates"
+            ],
+            "CreatedAt": "2024-05-01T00:56:02Z"
+        }
+    ]
 }

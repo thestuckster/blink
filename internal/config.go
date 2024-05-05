@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"time"
 )
 
 const AddOnsFolder = "\\_retail_\\Interface\\AddOns"
@@ -14,10 +15,11 @@ type Config struct {
 }
 
 type AddOn struct {
-	Url     string
-	Repo    string
-	Version string
-	Folders []string
+	Url       string
+	Repo      string
+	Version   string
+	Folders   []string
+	CreatedAt time.Time
 }
 
 func LoadConfig() Config {
@@ -45,12 +47,16 @@ func (config *Config) HasGamePath() bool {
 	return true
 }
 
-func (config *Config) AddAddOn(url, repo, version string, folders []string) {
+func (config *Config) AddAddOn(url, repo, version string,
+	createdAt time.Time,
+	folders []string) {
+
 	addOn := AddOn{
-		Url:     url,
-		Repo:    repo,
-		Version: version,
-		Folders: folders,
+		Url:       url,
+		Repo:      repo,
+		Version:   version,
+		Folders:   folders,
+		CreatedAt: createdAt,
 	}
 
 	config.AddOns = append(config.AddOns, addOn)

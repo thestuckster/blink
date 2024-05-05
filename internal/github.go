@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 type GitHubRelease struct {
@@ -18,6 +19,7 @@ type GitHubRelease struct {
 type GithubReleaseAsset struct {
 	DownloadUrl string `json:"browser_download_url"`
 	Name        string `json:"name"`
+	CreatedAt   string `json:"created_at"`
 }
 
 func FetchLatestRelease(repo string, config *Config) {
@@ -33,7 +35,7 @@ func FetchLatestRelease(repo string, config *Config) {
 	defer resp.Body.Close()
 
 	//create file
-	zipPath, err := createZipFile(config, zipAsset, err, resp)
+	zipPath, err := createZipFile(config, zipAsset, resp)
 	defer CleanUpFile(zipPath)
 
 	unzippedPath := config.GamePath + AddOnsFolder + "\\" + TrimFileExtension(zipAsset.Name, ".zip")
@@ -43,7 +45,7 @@ func FetchLatestRelease(repo string, config *Config) {
 	}
 	defer CleanUpFile(unzippedPath)
 
-	moveSubFilesAndUpdateConfig(repo, config, unzippedPath, release, err)
+	moveSubFilesAndUpdateConfig(repo, config, unzippedPath, release, zipAsset)
 }
 
 func getReleaseInfo(repo string) (*http.Response, error, GitHubRelease) {
@@ -89,7 +91,7 @@ func SplitProjectNameFromUrl(url string) string {
 	return parts[len(parts)-2] + "/" + parts[len(parts)-1]
 }
 
-func createZipFile(config *Config, zipAsset GithubReleaseAsset, err error, resp *http.Response) (string, error) {
+func createZipFile(config *Config, zipAsset GithubReleaseAsset, resp *http.Response) (string, error) {
 
 	zipPath := config.GamePath + AddOnsFolder + "\\" + zipAsset.Name
 	out, err := os.Create(zipPath)
@@ -106,11 +108,21 @@ func createZipFile(config *Config, zipAsset GithubReleaseAsset, err error, resp 
 	return zipPath, err
 }
 
-func moveSubFilesAndUpdateConfig(repo string, config *Config, unzippedPath string, release GitHubRelease, err error) {
+func moveSubFilesAndUpdateConfig(repo string,
+	config *Config,
+	unzippedPath string,
+	release GitHubRelease,
+	asset GithubReleaseAsset) {
+
 	folders := MoveFilesUpALevel(unzippedPath, config)
 	repoUrl := "https://api.github.com/repos/" + repo
 	version := release.Name
-	config.AddAddOn(repoUrl, repo, version, folders)
+	createdAt, err := time.Parse(time.RFC3339, asset.CreatedAt)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	config.AddAddOn(repoUrl, repo, version, createdAt, folders)
 	err = config.Save()
 	if err != nil {
 		log.Panic(err)

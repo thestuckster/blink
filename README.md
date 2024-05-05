@@ -4,6 +4,9 @@ Blink
 A CLI tool written in Go to download and manage World of Warcraft Retail add ons. All Addons are sourced
 and installed from Github releases.
 
+## Installation
+`go install github.com/thestuckster/blink@latest`
+
 ## Commands
 1. install <github url>
    * Installs the specified add on 
