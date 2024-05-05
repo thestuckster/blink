@@ -10,6 +10,13 @@ const AddOnsFolder = "\\_retail_\\Interface\\AddOns"
 
 type Config struct {
 	GamePath string
+	AddOns   []AddOn
+}
+
+type AddOn struct {
+	Url     string
+	Repo    string
+	Version string
 }
 
 func LoadConfig() Config {
@@ -35,6 +42,16 @@ func (config *Config) HasGamePath() bool {
 	}
 
 	return true
+}
+
+func (config *Config) AddAddOn(url, repo, version string) {
+	addOn := AddOn{
+		Url:     url,
+		Repo:    repo,
+		Version: version,
+	}
+
+	config.AddOns = append(config.AddOns, addOn)
 }
 
 func (config *Config) Save() error {
