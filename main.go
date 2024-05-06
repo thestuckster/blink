@@ -34,6 +34,6 @@ func createDefaultConfigIfMissing() {
 	_, err := os.Stat("config.json")
 	if os.IsNotExist(err) {
 		config := internal.Config{}
-		config.Save()
+		internal.SaveDefaultConfig(&config)
 	}
 }

@@ -94,3 +94,17 @@ func (config *Config) Save() error {
 
 	return nil
 }
+
+func SaveDefaultConfig(config *Config) error {
+	jsonString, err := json.MarshalIndent(config, "", "    ")
+	if err != nil {
+		return err
+	}
+
+	if err = os.WriteFile("config.json", jsonString, 0644); err != nil {
+		return err
+	}
+
+	return nil
+
+}
