@@ -87,9 +87,32 @@ func MoveFilesUpALevel(filePath string, config *Config) (folders []string) {
 	return folders
 }
 
-func CleanUpFile(filePath string) {
+func CleanUpFile(filePath string) error {
 	err := os.Remove(filePath)
 	if err != nil {
-		log.Panic(err)
+		return err
+	}
+
+	return nil
+}
+
+func BackUpExistingFile(file string) string {
+	backUpFileName := file + ".backup"
+
+	err := os.Rename(file, backUpFileName)
+	if err != nil {
+		panic(err)
+	}
+
+	return backUpFileName
+}
+
+func RestoreBackUps(backedUpFiles []string) {
+	for _, file := range backedUpFiles {
+		err := os.Rename(file, strings.TrimSuffix(file, ".backup"))
+		if err != nil {
+			log.Println("Error restoring from backup: " + file)
+			panic(err)
+		}
 	}
 }

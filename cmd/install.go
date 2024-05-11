@@ -35,5 +35,5 @@ func install(args []string) {
 	repoName := internal.SplitProjectNameFromUrl(args[0])
 	log.Println(repoName)
 
-	internal.FetchLatestRelease(repoName, &config)
+	internal.DownloadLatestRelease(repoName, &config)
 }

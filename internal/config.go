@@ -108,3 +108,12 @@ func SaveDefaultConfig(config *Config) error {
 	return nil
 
 }
+
+func FindAddOnDetails(repo string, config *Config) (int, *AddOn) {
+	for i, addOn := range config.AddOns {
+		if addOn.Repo == repo {
+			return i, &addOn
+		}
+	}
+	return -1, nil
+}
